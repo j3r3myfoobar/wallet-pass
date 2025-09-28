@@ -18,7 +18,6 @@ A serverless AWS solution that serves Apple Wallet passes (.pkpass) to iOS/macOS
 # Clone and install dependencies
 git clone <repository>
 cd wallet-pass
-npm install
 
 # Copy and configure environment
 cp .env.example .env
@@ -50,6 +49,7 @@ terraform init
 ## Configuration
 
 **Single `.env` file** contains all configuration:
+
 - **Apple Developer**: Certificates, team ID, bundle ID, auth tokens
 - **AWS Settings**: Region, retention policies
 - **Pass Content**: Serial numbers, service URLs
@@ -77,7 +77,32 @@ cd pkpass && npm run generate
 
 # File upload
 ./upload-files.sh
+
+# Documentation diagrams
+npm install && npx mmdc -i aws-architecture.md -o aws-architecture.png --iconPacks @iconify-json/logos -b transparent -s 2
 ```
+
+## Documentation Diagrams
+
+The project uses [Mermaid](https://mermaid.js.org/) for architecture diagrams with custom configuration for AWS icons.
+
+### Generate Architecture Diagrams
+
+```bash
+# Install dependencies (only needed once)
+npm install
+
+# Generate PNG from Mermaid markdown
+npx mmdc -i aws-architecture.md -o aws-architecture.png --iconPacks @iconify-json/logos -b transparent -s 2
+
+# Generate SVG format
+npx mmdc -i aws-architecture.md -o aws-architecture.svg --iconPacks @iconify-json/logos -b transparent -s 2
+```
+
+**Command flags**:
+- `--iconPacks @iconify-json/logos` - Enables AWS and tech logos
+- `-b transparent` - Transparent background
+- `-s 2` - Scale factor for higher resolution
 
 ## Security
 

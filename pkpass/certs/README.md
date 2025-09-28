@@ -2,10 +2,6 @@
 
 This directory contains Apple Developer certificates required for PassKit signing.
 
-## ⚠️ SECURITY WARNING
-
-**NEVER commit actual certificate files to Git!**
-
 ## Required Files (NOT included in repository)
 
 You need to place these files here for the project to work:
@@ -17,11 +13,7 @@ You need to place these files here for the project to work:
 ### 2. Apple Worldwide Developer Relations Certificate
 - `wwdr.pem` - Apple's intermediate certificate (can be downloaded from Apple)
 
-### 3. APNs Authentication Key (for push notifications)
-- `AuthKey_XXXXXXXXXX.p8` - Your APNs authentication key from Apple Developer
-- Replace `XXXXXXXXXX` with your actual Key ID
-
-### 4. Notification Certificate (alternative to APNs key)
+### 3. Notification Certificate (alternative to APNs key)
 - `notif_key.pem` - Alternative notification certificate (if not using APNs key)
 
 ## How to Obtain These Certificates
@@ -41,18 +33,3 @@ You need to place these files here for the project to work:
    - Apple Developer Console > Keys
    - Create new key with APNs service enabled
    - Download the .p8 file
-
-## Security Best Practices
-
-- Keep certificates in secure location locally
-- Use environment variables for certificate paths in production
-- Rotate certificates before expiration
-- Use AWS Secrets Manager for production secrets
-- Never share private keys or commit them to version control
-
-## File Permissions
-
-Set restrictive permissions on certificate files:
-```bash
-chmod 600 *.pem *.key *.p8
-```
