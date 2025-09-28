@@ -112,6 +112,7 @@ def handler(event, context):
     }
 
     print(f"Returning {len(updated_passes)} updated passes: {updated_passes}")
+    print(f"Response to Apple: {json.dumps(response_body)}")
 
     return {
         'statusCode': 200,

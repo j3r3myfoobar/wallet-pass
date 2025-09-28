@@ -95,13 +95,13 @@ function createVCard() {
   const photoPath = path.join(__dirname, 'template.pass', 'photo.jpg');
   const photoBase64 = fs.readFileSync(photoPath).toString('base64');
 
-  // Build vCard content
+  // Build vCard content using v3.0 format for better compatibility
   const vCardContent = [
     'BEGIN:VCARD',
-    'VERSION:4.0',
+    'VERSION:3.0',
     `FN:${name}`,
     `TITLE:${title}`,
-    `TEL;TYPE=cell,voice,wa:${phone}`,
+    `TEL;TYPE=CELL:${phone}`,
     `EMAIL:${email}`,
     `X-SOCIALPROFILE;TYPE=linkedin:${linkedIn}`,
     `PHOTO;ENCODING=BASE64;TYPE=JPEG:${photoBase64}`,

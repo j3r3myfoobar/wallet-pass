@@ -36,7 +36,7 @@ fi
 
 # Get bucket name from Terraform outputs
 print_status "Getting S3 bucket name from Terraform..."
-cd terraform
+cd ../terraform
 
 if [ ! -f "terraform.tfstate" ]; then
     print_error "terraform.tfstate not found. Please run 'terraform apply' first."
@@ -52,23 +52,23 @@ fi
 
 print_status "Using S3 bucket: $BUCKET_NAME"
 
-cd ..
+cd ../pkpass
 
 # Check if pass files exist
-PASS_FILE="pkpass/pass.pkpass"
-VCARD_FILE="pkpass/contact.vcard"
+PASS_FILE="pass.pkpass"
+VCARD_FILE="contact.vcard"
 
 if [ ! -f "$PASS_FILE" ]; then
     print_error "Pass file not found: $PASS_FILE"
     print_status "Please generate passes first:"
-    print_status "  cd pkpass && npm run generate"
+    print_status "  npm run generate"
     exit 1
 fi
 
 if [ ! -f "$VCARD_FILE" ]; then
     print_error "vCard file not found: $VCARD_FILE"
     print_status "Please generate passes first:"
-    print_status "  cd pkpass && npm run generate"
+    print_status "  npm run generate"
     exit 1
 fi
 
