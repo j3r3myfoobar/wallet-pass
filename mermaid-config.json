@@ -1,0 +1,5 @@
+{
+  "theme": "default",
+  "iconifyIcons": true,
+  "iconPacks": ["@iconify-json/logos"]
+}

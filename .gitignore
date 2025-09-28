@@ -1,0 +1,125 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+.env
+
+# Testing
+.coverage
+.pytest_cache/
+.tox/
+htmlcov/
+
+# Lambda build artifacts
+lambda_functions/.build/
+lambda_functions/__pycache__/
+*.zip
+
+# Terraform
+terraform/.terraform/
+terraform/.terraform.lock.hcl
+terraform/tfplan
+terraform/*.tfstate
+terraform/*.tfstate.backup
+*.tfvars
+*.tfvars.json
+
+# AWS
+.aws/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Node.js (for pkpass generation)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Certificates and private keys - NEVER commit private keys to Git!
+# Private keys and certificates
+pkpass/certs/*.pem
+pkpass/certs/*.key
+pkpass/certs/*.p8
+pkpass/certs/*.pk8
+pkpass/certs/*.p12
+# Note: .crt files (public certificates) are allowed if needed
+!pkpass/certs/.gitkeep
+!pkpass/certs/README.md
+
+# Environment files with secrets
+.env
+.env.local
+.env.*.local
+terraform.tfvars
+terraform.tfvars.json
+variables.auto.tfvars
+variables.auto.tfvars.json
+
+# AWS credentials
+.aws/credentials
+.aws/config
+
+# Local development secrets
+secrets.json
+config.json
+local-config.json
+
+# Generated pass files (keep source template)
+pkpass/pass.pkpass
+pkpass/contact.vcard
+
+# Claude Code
+.claude/
+
+# Project files
+CLAUDE.md
+GITHUB_CHECKLIST.md
+
+# Lock files
+package-lock.json
+pkpass/package-lock.json

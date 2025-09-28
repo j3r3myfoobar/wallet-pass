@@ -1,0 +1,74 @@
+{
+  "type": "generic",
+  "formatVersion": 1,
+  "passTypeIdentifier": "${PASS_TYPE_IDENTIFIER}",
+  "webServiceURL": "${WEB_SERVICE_URL}",
+  "serialNumber": "${SERIAL_NUMBER}",
+  "authenticationToken": "${PASSKIT_AUTH_TOKEN}",
+  "teamIdentifier": "${TEAM_IDENTIFIER}",
+  "organizationName": "${ORGANIZATION_NAME}",
+  "description": "${PASS_DESCRIPTION}",
+  "logoText": "${LOGO_TEXT}",
+  "logoTextAlignment": "PKTextAlignmentCenter",
+  "foregroundColor": "rgb(0, 0, 0)",
+  "backgroundColor": "rgb(245, 245, 245)",
+  "barcode": {
+    "message": "${LINKEDIN_URL}",
+    "format": "PKBarcodeFormatQR",
+    "messageEncoding": "utf-8"
+  },
+  "barcodes": [
+    {
+      "message": "${WEBSITE_URL}",
+      "format": "PKBarcodeFormatQR",
+      "messageEncoding": "iso-8859-1"
+    }
+  ],
+  "generic": {
+    "primaryFields": [
+      {
+        "key": "name",
+        "value": "${ORGANIZATION_NAME}",
+        "textAlignment": "PKTextAlignmentCenter"
+      }
+    ],
+    "secondaryFields": [
+      {
+        "key": "email",
+        "label": "Email",
+        "value": "${CONTACT_EMAIL}"
+      },
+      {
+        "key": "phone",
+        "label": "Phone",
+        "value": "${CONTACT_PHONE}"
+      }
+    ],
+    "backFields": [
+      {
+        "key": "email2",
+        "label": "Email",
+        "value": "${CONTACT_EMAIL}",
+        "dataDetectorTypes": [
+          "PKDataDetectorTypeLink"
+        ]
+      },
+      {
+        "key": "phone2",
+        "label": "Phone",
+        "value": "${CONTACT_PHONE}",
+        "dataDetectorTypes": [
+          "PKDataDetectorTypePhoneNumber"
+        ]
+      },
+      {
+        "key": "linkedin",
+        "label": "LinkedIn",
+        "value": "${LINKEDIN_URL}",
+        "dataDetectorTypes": [
+          "PKDataDetectorTypeLink"
+        ]
+      }
+    ]
+  }
+}
