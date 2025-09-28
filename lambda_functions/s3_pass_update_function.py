@@ -50,13 +50,12 @@ def handler(event, context):
 
     return {'statusCode': 200, 'body': 'Processing complete'}
 
-def update_registered_devices():
+def get_registered_devices():
     """
-    Updates all registered devices with new pass version and sends push notifications.
+    Retrieves all registered devices for the pass from DynamoDB.
+    Returns list of registered device items.
     """
     try:
-        # Get current timestamp for version tracking
-        current_timestamp = str(int(datetime.utcnow().timestamp()))
         pass_id = f"{PASS_TYPE_IDENTIFIER}/{SERIAL_NUMBER}"
 
         # Scan for all registrations of this pass
@@ -69,7 +68,22 @@ def update_registered_devices():
 
         registered_devices = response.get('Items', [])
         print(f"Found {len(registered_devices)} registered devices")
+        return registered_devices
 
+    except Exception as e:
+        print(f"Error retrieving registered devices: {e}")
+        return []
+
+def update_all_registered_devices(registered_devices):
+    """
+    Updates all registered devices with new pass version and sends push notifications.
+    Takes list of registered device items as input.
+    Returns number of successful updates.
+    """
+    try:
+        # Get current timestamp for version tracking
+        current_timestamp = str(int(datetime.utcnow().timestamp()))
+        pass_id = f"{PASS_TYPE_IDENTIFIER}/{SERIAL_NUMBER}"
         success_count = 0
 
         for device in registered_devices:
@@ -103,6 +117,28 @@ def update_registered_devices():
                 print(f"Error updating device {device_id}: {e}")
 
         print(f"Successfully updated {success_count} out of {len(registered_devices)} devices")
+        return success_count
+
+    except Exception as e:
+        print(f"Error in update_all_registered_devices: {e}")
+        return 0
+
+def update_registered_devices():
+    """
+    Updates all registered devices with new pass version and sends push notifications.
+    """
+    try:
+        # Get all registered devices
+        registered_devices = get_registered_devices()
+
+        if not registered_devices:
+            print("No registered devices found")
+            return True  # No devices to update is considered success
+
+        # Update all registered devices
+        success_count = update_all_registered_devices(registered_devices)
+
+        # Return True if all devices were updated successfully
         return success_count == len(registered_devices)
 
     except Exception as e:

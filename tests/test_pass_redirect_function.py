@@ -31,7 +31,7 @@ class TestPassRedirectFunction(unittest.TestCase):
                 self.assertEqual(result['statusCode'], 200)
                 self.assertEqual(result['headers']['Content-Type'], 'application/vnd.apple.pkpass')
                 self.assertEqual(result['headers']['Content-Disposition'], 'attachment; filename="pass.pkpass"')
-                self.assertEqual(result['headers']['Last-Modified'], 'Sat, 28 Sep 2025 17:30:00 GMT')
+                self.assertEqual(result['headers']['Last-Modified'], 'Sun, 28 Sep 2025 17:30:00 GMT')
                 self.assertTrue(result['isBase64Encoded'])
 
         self.assertEqual(mock_s3.get_object.call_count, len(apple_agents))
@@ -56,7 +56,7 @@ class TestPassRedirectFunction(unittest.TestCase):
                 self.assertEqual(result['statusCode'], 200)
                 self.assertEqual(result['headers']['Content-Type'], 'text/vcard')
                 self.assertEqual(result['headers']['Content-Disposition'], 'attachment; filename="contact.vcard"')
-                self.assertEqual(result['headers']['Last-Modified'], 'Sat, 28 Sep 2025 17:30:00 GMT')
+                self.assertEqual(result['headers']['Last-Modified'], 'Sun, 28 Sep 2025 17:30:00 GMT')
                 self.assertTrue(result['isBase64Encoded'])
 
         self.assertEqual(mock_s3.get_object.call_count, len(non_apple_agents))
@@ -91,13 +91,13 @@ class TestPassRedirectFunction(unittest.TestCase):
         event = {
             'headers': {
                 'User-Agent': 'iPhone',
-                'If-Modified-Since': 'Sat, 28 Sep 2025 18:00:00 GMT'
+                'If-Modified-Since': 'Sun, 28 Sep 2025 18:00:00 GMT'
             }
         }
         result = handler(event, {})
 
         self.assertEqual(result['statusCode'], 304)
-        self.assertEqual(result['headers']['Last-Modified'], 'Sat, 28 Sep 2025 17:30:00 GMT')
+        self.assertEqual(result['headers']['Last-Modified'], 'Sun, 28 Sep 2025 17:30:00 GMT')
         self.assertEqual(result['body'], '')
 
     @patch('pass_redirect_function.s3')
@@ -114,14 +114,14 @@ class TestPassRedirectFunction(unittest.TestCase):
         event = {
             'headers': {
                 'User-Agent': 'iPhone',
-                'If-Modified-Since': 'Sat, 28 Sep 2025 17:30:00 GMT'
+                'If-Modified-Since': 'Sun, 28 Sep 2025 17:30:00 GMT'
             }
         }
         result = handler(event, {})
 
         self.assertEqual(result['statusCode'], 200)
         self.assertEqual(result['headers']['Content-Type'], 'application/vnd.apple.pkpass')
-        self.assertEqual(result['headers']['Last-Modified'], 'Sat, 28 Sep 2025 18:00:00 GMT')
+        self.assertEqual(result['headers']['Last-Modified'], 'Sun, 28 Sep 2025 18:00:00 GMT')
         self.assertTrue(result['isBase64Encoded'])
 
 

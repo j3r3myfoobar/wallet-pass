@@ -1,0 +1,74 @@
+{
+  "type": "generic",
+  "formatVersion": 1,
+  "passTypeIdentifier": "pass.tel.lemaire.business",
+  "webServiceURL": "https://pass.lemaire.tel",
+  "serialNumber": "jeremy-business-card",
+  "authenticationToken": "a1b2c3d4e5f6g7h8",
+  "teamIdentifier": "9SHPM7WVK7",
+  "organizationName": "Jeremy Lemaire",
+  "description": "Jeremy Lemaire Business Card",
+  "logoText": "Solution Architect",
+  "logoTextAlignment": "PKTextAlignmentCenter",
+  "foregroundColor": "rgb(0, 0, 0)",
+  "backgroundColor": "rgb(245, 245, 245)",
+  "barcode": {
+    "message": "https://www.linkedin.com/in/jeremy-lem/",
+    "format": "PKBarcodeFormatQR",
+    "messageEncoding": "utf-8"
+  },
+  "barcodes": [
+    {
+      "message": "https://pass.lemaire.tel",
+      "format": "PKBarcodeFormatQR",
+      "messageEncoding": "iso-8859-1"
+    }
+  ],
+  "generic": {
+    "primaryFields": [
+      {
+        "key": "name",
+        "value": "Jeremy Lemaire",
+        "textAlignment": "PKTextAlignmentCenter"
+      }
+    ],
+    "secondaryFields": [
+      {
+        "key": "email",
+        "label": "Email",
+        "value": "jeremy.lemaire@pm.me"
+      },
+      {
+        "key": "phone",
+        "label": "Phone",
+        "value": "+33612479687"
+      }
+    ],
+    "backFields": [
+      {
+        "key": "email2",
+        "label": "Email",
+        "value": "jeremy.lemaire@pm.me",
+        "dataDetectorTypes": [
+          "PKDataDetectorTypeLink"
+        ]
+      },
+      {
+        "key": "phone2",
+        "label": "Phone",
+        "value": "+33612479687",
+        "dataDetectorTypes": [
+          "PKDataDetectorTypePhoneNumber"
+        ]
+      },
+      {
+        "key": "linkedin",
+        "label": "LinkedIn",
+        "value": "https://www.linkedin.com/in/jeremy-lem/",
+        "dataDetectorTypes": [
+          "PKDataDetectorTypeLink"
+        ]
+      }
+    ]
+  }
+}

@@ -19,6 +19,7 @@ class TestPasskitRegistrationFunction(unittest.TestCase):
         # Setup
         mock_validate_auth.return_value = None  # No auth error
         mock_table.get_item.return_value = {}  # No existing item
+        mock_table.scan.return_value = {'Count': 5}  # Under the limit
         mock_table.put_item.return_value = None
 
         event = {
@@ -218,6 +219,7 @@ class TestPasskitRegistrationFunction(unittest.TestCase):
         # Setup
         mock_validate_auth.return_value = None
         mock_table.get_item.return_value = {}  # No existing item
+        mock_table.scan.return_value = {'Count': 5}  # Under the limit
         mock_table.put_item.side_effect = Exception('DynamoDB write error')
 
         event = {
@@ -267,6 +269,40 @@ class TestPasskitRegistrationFunction(unittest.TestCase):
         self.assertEqual(result['statusCode'], 400)
         body = json.loads(result['body'])
         self.assertEqual(body['error'], 'pushToken is required')
+
+    @patch('passkit_registration_function.table')
+    @patch('passkit_registration_function.common.validate_authorization')
+    @patch.dict(os.environ, {'TABLE_NAME': 'test-table', 'AUTH_TOKEN': 'test-token'})
+    def test_registration_limit_exceeded(self, mock_validate_auth, mock_table):
+        # Setup
+        mock_validate_auth.return_value = None  # No auth error
+        mock_table.get_item.return_value = {}  # No existing item
+        mock_table.scan.return_value = {'Count': 400}  # At the limit
+
+        event = {
+            'pathParameters': {
+                'deviceLibraryIdentifier': 'test-device-123',
+                'passTypeIdentifier': 'pass.tel.lemaire.business',
+                'serialNumber': 'pass-v5'
+            },
+            'body': json.dumps({
+                'pushToken': 'abcd1234pushtoken'
+            }),
+            'headers': {
+                'Authorization': 'ApplePass test-token'
+            }
+        }
+
+        # Execute
+        result = handler(event, {})
+
+        # Assert
+        self.assertEqual(result['statusCode'], 429)  # Too Many Requests
+        body = json.loads(result['body'])
+        self.assertEqual(body['error'], 'Registration limit exceeded')
+
+        # Verify that put_item was NOT called
+        mock_table.put_item.assert_not_called()
 
 
 if __name__ == '__main__':

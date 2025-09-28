@@ -9,15 +9,8 @@ TABLE_NAME = os.environ.get('TABLE_NAME', 'WalletRegistrations')
 dynamodb = boto3.resource('dynamodb')
 table = dynamodb.Table(TABLE_NAME)
 
-def handler(event, context):
-    """
-    Handles the Get Updatable Passes request from Apple Wallet.
-    Endpoint: GET /v1/devices/{deviceLibraryIdentifier}/registrations/{passTypeIdentifier}
-    Optional query parameter: passesUpdatedSince
-    """
-    print(f"Received event: {json.dumps(event)}")
-
-    # --- 1. Extract path parameters ---
+def extract_path_parameters(event):
+    """Extract and validate path parameters from the event."""
     try:
         params = event.get('pathParameters', {})
         device_id = params.get('deviceLibraryIdentifier')
@@ -25,17 +18,15 @@ def handler(event, context):
 
         if not all([device_id, pass_type_id]):
             print("Error: Missing path parameters.")
-            return {'statusCode': 400, 'body': json.dumps({'error': 'Missing path parameters'})}
+            return None, {'statusCode': 400, 'body': json.dumps({'error': 'Missing path parameters'})}
 
+        return (device_id, pass_type_id), None
     except Exception as e:
         print(f"Error parsing path parameters: {e}")
-        return {'statusCode': 400, 'body': json.dumps({'error': 'Invalid request format'})}
+        return None, {'statusCode': 400, 'body': json.dumps({'error': 'Invalid request format'})}
 
-    # --- 2. No authorization required for Get Updatable Passes ---
-    # According to Apple's PassKit documentation, this endpoint does not require
-    # authorization header - devices are authenticated via prior registration
-
-    # --- 3. Extract query parameters ---
+def extract_query_parameters(event):
+    """Extract and validate query parameters from the event."""
     try:
         query_params = event.get('queryStringParameters') or {}
         passes_updated_since = query_params.get('passesUpdatedSince')
@@ -46,15 +37,15 @@ def handler(event, context):
                 int(passes_updated_since)
             except (ValueError, TypeError):
                 print(f"Error: Invalid timestamp format: {passes_updated_since}")
-                return {'statusCode': 400, 'body': json.dumps({'error': 'Invalid timestamp format'})}
+                return None, {'statusCode': 400, 'body': json.dumps({'error': 'Invalid timestamp format'})}
 
-        print(f"Device: {device_id}, PassType: {pass_type_id}, UpdatedSince: {passes_updated_since}")
-
+        return passes_updated_since, None
     except Exception as e:
         print(f"Error parsing query parameters: {e}")
-        return {'statusCode': 400, 'body': json.dumps({'error': 'Invalid query parameters'})}
+        return None, {'statusCode': 400, 'body': json.dumps({'error': 'Invalid query parameters'})}
 
-    # --- 4. Query DynamoDB for registered passes ---
+def query_registered_passes(device_id, pass_type_id):
+    """Query DynamoDB for registered passes for the device."""
     try:
         # For your single business card use case, we know the exact pass_id
         pass_id = f"{pass_type_id}/jeremy-business-card"
@@ -72,14 +63,15 @@ def handler(event, context):
             items = []
             print(f"No registration found for device {device_id} and pass {pass_id}")
 
+        return items, None
     except Exception as e:
         print(f"Error querying DynamoDB: {e}")
-        return {'statusCode': 500, 'body': json.dumps({'error': 'Database query failed'})}
+        return None, {'statusCode': 500, 'body': json.dumps({'error': 'Database query failed'})}
 
-    # --- 5. Filter by update time if provided ---
+def filter_passes_by_update_time(items, passes_updated_since):
+    """Filter passes by update time if provided."""
     try:
         updated_passes = []
-        current_timestamp = str(int(datetime.now(timezone.utc).timestamp()))
 
         for item in items:
             serial_number = item.get('serialNumber')
@@ -101,11 +93,15 @@ def handler(event, context):
                 # If no timestamp provided, return all registered passes
                 updated_passes.append(serial_number)
 
+        return updated_passes, None
     except Exception as e:
         print(f"Error filtering passes: {e}")
-        return {'statusCode': 500, 'body': json.dumps({'error': 'Error processing pass data'})}
+        return None, {'statusCode': 500, 'body': json.dumps({'error': 'Error processing pass data'})}
 
-    # --- 6. Return response ---
+def build_response(updated_passes):
+    """Build the final response for Apple Wallet."""
+    current_timestamp = str(int(datetime.now(timezone.utc).timestamp()))
+
     response_body = {
         "lastUpdated": current_timestamp,
         "serialNumbers": updated_passes
@@ -121,3 +117,41 @@ def handler(event, context):
         },
         'body': json.dumps(response_body)
     }
+
+def handler(event, context):
+    """
+    Handles the Get Updatable Passes request from Apple Wallet.
+    Endpoint: GET /v1/devices/{deviceLibraryIdentifier}/registrations/{passTypeIdentifier}
+    Optional query parameter: passesUpdatedSince
+    """
+    print(f"Received event: {json.dumps(event)}")
+
+    # --- 1. Extract path parameters ---
+    path_params, error = extract_path_parameters(event)
+    if error:
+        return error
+    device_id, pass_type_id = path_params
+
+    # --- 2. No authorization required for Get Updatable Passes ---
+    # According to Apple's PassKit documentation, this endpoint does not require
+    # authorization header - devices are authenticated via prior registration
+
+    # --- 3. Extract query parameters ---
+    passes_updated_since, error = extract_query_parameters(event)
+    if error:
+        return error
+
+    print(f"Device: {device_id}, PassType: {pass_type_id}, UpdatedSince: {passes_updated_since}")
+
+    # --- 4. Query DynamoDB for registered passes ---
+    items, error = query_registered_passes(device_id, pass_type_id)
+    if error:
+        return error
+
+    # --- 5. Filter by update time if provided ---
+    updated_passes, error = filter_passes_by_update_time(items, passes_updated_since)
+    if error:
+        return error
+
+    # --- 6. Return response ---
+    return build_response(updated_passes)
