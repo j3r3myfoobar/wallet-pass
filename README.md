@@ -2,6 +2,8 @@
 
 A serverless AWS solution that serves Apple Wallet passes (.pkpass) to iOS/macOS devices and vCard files to other devices, accessible at `pass.lemaire.tel`.
 
+**Apple Developer Account Required**: You need an active Apple Developer Program membership to generate the certificates required for signing Apple Wallet passes.
+
 ## Architecture
 
 - **Lambda Functions**: User-Agent detection, pass serving, Apple Wallet webhook handling
@@ -100,13 +102,14 @@ npx mmdc -i aws-architecture.md -o aws-architecture.svg --iconPacks @iconify-jso
 ```
 
 **Command flags**:
+
 - `--iconPacks @iconify-json/logos` - Enables AWS and tech logos
 - `-b transparent` - Transparent background
 - `-s 2` - Scale factor for higher resolution
 
 ## Security
 
-⚠️ **Critical**: Never commit certificates (.pem, .key, .p8), auth tokens, or the `.env` file to Git. All sensitive configuration uses environment variables.
+**Critical**: Never commit certificates (.pem, .key, .p8), auth tokens, or the `.env` file to Git. All sensitive configuration uses environment variables.
 
 ## File Structure
 
@@ -119,3 +122,9 @@ npx mmdc -i aws-architecture.md -o aws-architecture.svg --iconPacks @iconify-jso
 ├── .env.example        # Environment template
 └── tests/              # Unit tests
 ```
+
+## Todo
+
+- **Domain Configuration Warning**: This code is currently configured for the domain `pass.lemaire.tel`. You'll need to update the domain configuration throughout the codebase (Terraform files, Lambda functions, and pass templates) to use your own domain before deployment.
+- Make support multiple user
+- Add support for Google Wallet (should be simpler because the pass lives in Google's cloud and updates propagate automatically without requiring a push to each device)

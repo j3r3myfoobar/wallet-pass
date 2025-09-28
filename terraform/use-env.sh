@@ -5,14 +5,14 @@
 
 # Check if .env file exists
 if [ ! -f "../.env" ]; then
-    echo "❌ Error: .env file not found!"
-    echo "📋 Copy .env.example to .env and fill in your values:"
+    echo "ERROR: .env file not found!"
+    echo "Copy .env.example to .env and fill in your values:"
     echo "   cp .env.example .env"
     exit 1
 fi
 
 # Load environment variables from .env file
-echo "🔧 Loading environment variables from .env file..."
+echo "Loading environment variables from .env file..."
 set -a  # automatically export all variables
 source ../.env
 set +a  # turn off automatic export
@@ -34,13 +34,13 @@ for var in "${required_vars[@]}"; do
 done
 
 if [ ${#missing_vars[@]} -ne 0 ]; then
-    echo "❌ Error: Missing required environment variables:"
+    echo "ERROR: Missing required environment variables:"
     printf '   %s\n' "${missing_vars[@]}"
-    echo "📝 Please update your .env file with the missing values"
+    echo "Please update your .env file with the missing values"
     exit 1
 fi
 
-echo "✅ Environment variables loaded successfully"
+echo "Environment variables loaded successfully"
 
 # Run terraform command
 if [ $# -eq 0 ]; then

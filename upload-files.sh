@@ -9,22 +9,22 @@ YELLOW='\033[1;33m'
 NC='\033[0m'
 
 print_status() {
-    echo -e "${BLUE}ℹ️  $1${NC}"
+    echo -e "${BLUE}INFO: $1${NC}"
 }
 
 print_success() {
-    echo -e "${GREEN}✅ $1${NC}"
+    echo -e "${GREEN}SUCCESS: $1${NC}"
 }
 
 print_error() {
-    echo -e "${RED}❌ $1${NC}"
+    echo -e "${RED}ERROR: $1${NC}"
 }
 
 print_warning() {
-    echo -e "${YELLOW}⚠️  $1${NC}"
+    echo -e "${YELLOW}WARNING: $1${NC}"
 }
 
-echo "📤 Uploading pass files to S3..."
+echo "Uploading pass files to S3..."
 
 # Check if AWS CLI is installed
 if ! command -v aws &> /dev/null; then
@@ -109,5 +109,5 @@ fi
 print_status "Verifying uploads..."
 aws s3 ls "s3://$BUCKET_NAME/" --human-readable
 
-print_success "🎉 All files uploaded successfully!"
+print_success "All files uploaded successfully!"
 print_status "Your pass service is ready at: https://pass.lemaire.tel"

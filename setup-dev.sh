@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "🐍 Setting up Python development environment..."
+echo "Setting up Python development environment..."
 
 # Colors
 GREEN='\033[0;32m'
@@ -9,11 +9,11 @@ BLUE='\033[0;34m'
 NC='\033[0m'
 
 print_status() {
-    echo -e "${BLUE}ℹ️  $1${NC}"
+    echo -e "${BLUE}INFO: $1${NC}"
 }
 
 print_success() {
-    echo -e "${GREEN}✅ $1${NC}"
+    echo -e "${GREEN}SUCCESS: $1${NC}"
 }
 
 # Create virtual environment
@@ -37,7 +37,7 @@ pip3 install --upgrade pip
 print_status "Installing development dependencies..."
 pip3 install -r lambda_functions/requirements.txt
 
-print_success "🎉 Development environment ready!"
+print_success "Development environment ready!"
 echo ""
 echo "To activate the environment in future sessions:"
 echo "  source venv/bin/activate"

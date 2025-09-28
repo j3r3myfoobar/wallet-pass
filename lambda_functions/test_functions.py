@@ -13,7 +13,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 
 def test_pass_redirect_function():
     """Test the pass redirect function with different user agents."""
-    print("🧪 Testing pass_redirect_function...")
+    print("Testing pass_redirect_function...")
 
     # Import the function
     from pass_redirect_function import handler
@@ -43,7 +43,7 @@ def test_pass_redirect_function():
         assert result['statusCode'] == 200
         assert 'application/vnd.apple.pkpass' in result['headers']['Content-Type']
         mock_s3.get_object.assert_called_with(Bucket='test-bucket', Key='pass.pkpass')
-        print("  ✅ iOS user agent test passed")
+        print("  SUCCESS: iOS user agent test passed")
 
     # Test non-iOS user agent
     with patch('pass_redirect_function.s3') as mock_s3:
@@ -61,11 +61,11 @@ def test_pass_redirect_function():
         assert result['statusCode'] == 200
         assert 'text/vcard' in result['headers']['Content-Type']
         mock_s3.get_object.assert_called_with(Bucket='test-bucket', Key='contact.vcard')
-        print("  ✅ Non-iOS user agent test passed")
+        print("  SUCCESS: Non-iOS user agent test passed")
 
 def test_passkit_registration_function():
     """Test the passkit registration function."""
-    print("🧪 Testing passkit_registration_function...")
+    print("Testing passkit_registration_function...")
 
     from passkit_registration_function import handler
 
@@ -93,21 +93,21 @@ def test_passkit_registration_function():
         # Should return 201 for successful registration
         assert result['statusCode'] == 201
         mock_table.put_item.assert_called_once()
-        print("  ✅ Registration test passed")
+        print("  SUCCESS: Registration test passed")
 
 def run_all_tests():
     """Run all tests."""
-    print("🚀 Starting Lambda function tests...\n")
+    print("Starting Lambda function tests...\n")
 
     try:
         test_pass_redirect_function()
         test_passkit_registration_function()
 
-        print(f"\n🎉 All tests passed!")
+        print(f"\nAll tests passed!")
         return True
 
     except Exception as e:
-        print(f"\n❌ Test failed: {str(e)}")
+        print(f"\nTEST FAILED: {str(e)}")
         import traceback
         traceback.print_exc()
         return False

@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e  # Exit on any error
 
-echo "🚀 Starting deployment..."
+echo "Starting deployment..."
 
 # Colors for output
 GREEN='\033[0;32m'
@@ -11,15 +11,15 @@ NC='\033[0m' # No Color
 
 # Function to print colored output
 print_status() {
-    echo -e "${BLUE}ℹ️  $1${NC}"
+    echo -e "${BLUE}INFO: $1${NC}"
 }
 
 print_success() {
-    echo -e "${GREEN}✅ $1${NC}"
+    echo -e "${GREEN}SUCCESS: $1${NC}"
 }
 
 print_error() {
-    echo -e "${RED}❌ $1${NC}"
+    echo -e "${RED}ERROR: $1${NC}"
 }
 
 # Clean up previous build artifacts
@@ -95,5 +95,5 @@ rm -f tfplan
 
 cd ..
 
-print_success "🎉 Deployment completed successfully!"
+print_success "Deployment completed successfully!"
 print_status "Your serverless application is now updated at: https://pass.lemaire.tel"
